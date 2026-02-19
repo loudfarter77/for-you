@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💌 Important Question</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #ff3d7f;
+    --lime: #b8ff57;
+    --cyan: #00e5d4;
+    --purple: #7b2fff;
+    --cream: #fdf8f0;
+    --dark: #12001f;
+    --mid: #1e0035;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: white;
+  }
+
+  /* Subtle scanlines */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.01) 3px, rgba(255,255,255,0.01) 4px);
+    pointer-events: none; z-index: 999;
+  }
+
+  /* Gentle floating particles */
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: drift linear infinite;
+    opacity: 0;
+  }
+  @keyframes drift {
+    0%   { transform: translateY(105vh) translateX(0); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-5vh) translateX(30px); opacity: 0; }
+  }
+
+  /* Screens */
+  .screen {
+    display: none; position: relative; z-index: 1;
+    min-height: 100vh; justify-content: center; align-items: center;
+    padding: 3rem 1.5rem; flex-direction: column; text-align: center;
+  }
+  .screen.active { display: flex; }
+
+  /* ── INTRO ── */
+  #intro {
+    background: radial-gradient(ellipse at 50% 60%, #2a005a 0%, var(--dark) 65%);
+  }
+
+  .intro-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .intro-emoji {
+    font-size: 5rem; display: block; margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 30px rgba(255,61,127,0.6));
+    animation: heartbeat 2s ease-in-out infinite, fadeUp 0.8s ease forwards 0.5s;
+    opacity: 0;
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    30%     { transform: scale(1.12); }
+    60%     { transform: scale(1.06); }
+  }
+
+  .intro-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3rem, 10vw, 6rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: white;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.7s;
+    position: relative;
+  }
+  .intro-title span { color: var(--pink); }
+
+  .intro-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.75rem; margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .open-btn {
+    padding: 0.9rem 2.5rem;
+    background: var(--pink); color: white;
+    border: none; font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem; letter-spacing: 0.12em;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(255,61,127,0.4);
+    transition: box-shadow 0.3s, transform 0.15s;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.1s;
+    position: relative; overflow: hidden;
+  }
+  .open-btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .open-btn:hover::after { transform: translateX(100%); }
+  .open-btn:hover { box-shadow: 0 0 60px rgba(255,61,127,0.7); transform: translateY(-2px); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--mid);
+    padding: clamp(2rem, 5vw, 3rem);
+    max-width: 600px; width: 100%;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 0 60px rgba(123,47,255,0.2), 0 2px 40px rgba(0,0,0,0.6);
+    position: relative;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan), var(--lime));
+  }
+
+  /* ── QUIZ ── */
+  #quiz { background: radial-gradient(ellipse at 50% 40%, #1e0040 0%, var(--dark) 70%); }
+
+  .quiz-eyebrow {
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--purple); margin-bottom: 1.25rem; margin-top: 0.25rem;
+  }
+
+  .question {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    letter-spacing: 0.05em; line-height: 1.05;
+    color: white; margin-bottom: 0.5rem;
+  }
+  .question span { color: var(--pink); }
+
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem; color: rgba(255,255,255,0.35);
+    margin-bottom: 2rem;
+  }
+
+  .options { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; text-align: left; }
+
+  .option {
+    display: flex; align-items: center; gap: 0.9rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(255,255,255,0.03);
+    font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.65);
+  }
+  .option:hover {
+    background: rgba(255,61,127,0.1);
+    border-color: rgba(255,61,127,0.4);
+    color: white;
+    transform: translateX(4px);
+  }
+  .option:nth-child(2):hover { background: rgba(184,255,87,0.07); border-color: rgba(184,255,87,0.3); }
+  .option:nth-child(3):hover { background: rgba(255,100,50,0.1); border-color: rgba(255,100,50,0.3); }
+  .option:nth-child(4):hover { background: rgba(0,229,212,0.08); border-color: rgba(0,229,212,0.3); }
+  .option:nth-child(5):hover { background: rgba(255,220,0,0.07); border-color: rgba(255,220,0,0.3); }
+  .option:nth-child(6):hover { background: rgba(123,47,255,0.15); border-color: rgba(123,47,255,0.5); color: rgba(255,255,255,0.9); }
+
+  .option-letter {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.1rem; color: var(--pink);
+    min-width: 1.3rem; letter-spacing: 0.05em;
+  }
+  .option:nth-child(6) .option-letter { color: var(--purple); }
+
+  /* ── RESPONSES ── */
+  #res-a, #res-b, #res-c, #res-d, #res-e {
+    background: radial-gradient(ellipse at 50% 50%, #1e0040 0%, var(--dark) 70%);
+  }
+
+  .res-emoji {
+    font-size: 3.5rem; margin-bottom: 1.25rem;
+    filter: drop-shadow(0 0 20px rgba(255,61,127,0.5));
+  }
+  .res-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: 0.05em; color: white; margin-bottom: 0.75rem;
+  }
+  .res-msg {
+    font-size: 0.9rem; line-height: 1.75;
+    color: rgba(255,255,255,0.55); margin-bottom: 2rem; font-weight: 600;
+  }
+  .res-msg strong { color: var(--cyan); }
+
+  .back-btn {
+    padding: 0.7rem 1.8rem;
+    background: transparent; color: var(--cyan);
+    border: 1px solid var(--cyan);
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem; letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 20px rgba(0,229,212,0.1);
+  }
+  .back-btn:hover { background: rgba(0,229,212,0.1); box-shadow: 0 0 30px rgba(0,229,212,0.3); }
+
+  /* ── YES SCREEN ── */
+  #yes-screen {
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(255,61,127,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 50%, rgba(123,47,255,0.12) 0%, transparent 55%),
+      var(--dark);
+  }
+
+  .yes-card {
+    background: var(--mid);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 80px rgba(255,61,127,0.15), 0 0 40px rgba(123,47,255,0.15);
+    padding: clamp(2rem, 5vw, 3.5rem);
+    max-width: 560px; width: 100%;
+    position: relative;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .yes-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+  }
+
+  .yes-eyebrow {
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--lime); margin-bottom: 1.25rem; margin-top: 0.25rem;
+  }
+
+  .yes-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    letter-spacing: 0.05em; line-height: 1;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 50%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 40px rgba(255,61,127,0.3));
+  }
+
+  .yes-divider {
+    width: 48px; height: 2px;
+    background: linear-gradient(90deg, var(--pink), var(--purple));
+    margin: 0 auto 1.5rem;
+  }
+
+  .yes-msg {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8; margin-bottom: 1.5rem;
+    text-align: left;
+    border-left: 2px solid var(--pink);
+    padding-left: 1rem;
+  }
+  .yes-msg em { color: var(--cyan); font-style: normal; font-family: 'DM Sans', sans-serif; font-weight: 700; }
+
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed; pointer-events: none;
+    animation: cfetti linear forwards; z-index: 100;
+  }
+  @keyframes cfetti {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<!-- INTRO -->
+<div class="screen active" id="intro">
+  <p class="intro-eyebrow">for your eyes only</p>
+  <span class="intro-emoji">💌</span>
+  <h1 class="intro-title">You've<br>got <span>mail</span></h1>
+  <p class="intro-sub">one very important question inside...</p>
+  <button class="open-btn" onclick="showScreen('quiz')">OPEN IT ✦</button>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="quiz">
+  <div class="card">
+    <p class="quiz-eyebrow">✦ Official Quiz · Choose wisely</p>
+    <h1 class="question">Will you be <span>my...?</span></h1>
+    <p class="subtitle">only one correct answer. you'll know it when you see it.</p>
+    <ul class="options">
+      <li class="option" onclick="answer('a')"><span class="option-letter">A.</span> Gorgeous Girlfriend 💅</li>
+      <li class="option" onclick="answer('b')"><span class="option-letter">B.</span> Adventure Amigo 🗺️</li>
+      <li class="option" onclick="answer('c')"><span class="option-letter">C.</span> Sexual Satisfier 🫣</li>
+      <li class="option" onclick="answer('d')"><span class="option-letter">D.</span> Cuddle Companion 🧸</li>
+      <li class="option" onclick="answer('e')"><span class="option-letter">E.</span> Partner-in-Play 🏀</li>
+      <li class="option" onclick="answer('yes')"><span class="option-letter">G.</span> All of the above ⭐</li>
+    </ul>
+  </div>
+</div>
+
+<!-- RESPONSES -->
+<div class="screen" id="res-a">
+  <div class="card">
+    <div class="res-emoji">💅</div>
+    <h2 class="res-title">Technically correct...</h2>
+    <p class="res-msg">Gorgeous girlfriend is definitely part of the deal. But there's one answer that covers <strong>way more ground</strong>. You're so close.</p>
+    <button class="back-btn" onclick="goBack()">← Let me look again</button>
+  </div>
+</div>
+
+<div class="screen" id="res-b">
+  <div class="card">
+    <div class="res-emoji">🗺️</div>
+    <h2 class="res-title">Adventure awaits...</h2>
+    <p class="res-msg">100% we're going on adventures. But there's one answer that says <strong>all of this and more</strong>. Go find it.</p>
+    <button class="back-btn" onclick="goBack()">← Back to the map</button>
+  </div>
+</div>
+
+<div class="screen" id="res-c">
+  <div class="card">
+    <div class="res-emoji">💀</div>
+    <h2 class="res-title">Lmaooo</h2>
+    <p class="res-msg">Iconic answer. Respect. But maybe let's make it <strong>official first</strong> yeah? There's a better option on that list.</p>
+    <button class="back-btn" onclick="goBack()">← okay okay, back i go</button>
+  </div>
+</div>
+
+<div class="screen" id="res-d">
+  <div class="card">
+    <div class="res-emoji">🧸</div>
+    <h2 class="res-title">Getting warmer...</h2>
+    <p class="res-msg">Cuddles are absolutely locked in, don't worry. But there's one answer that covers <strong>all of it</strong>. Take another look.</p>
+    <button class="back-btn" onclick="goBack()">← Back to the quiz</button>
+  </div>
+</div>
+
+<div class="screen" id="res-e">
+  <div class="card">
+    <div class="res-emoji">🏀</div>
+    <h2 class="res-title">Let's ball!!</h2>
+    <p class="res-msg">We'll absolutely be ballin' together. But there's <strong>one answer</strong> that wraps it all up perfectly. Go get it.</p>
+    <button class="back-btn" onclick="goBack()">← One more look</button>
+  </div>
+</div>
+
+<!-- YES -->
+<div class="screen" id="yes-screen">
+  <div class="yes-card">
+    <p class="yes-eyebrow">✦ correct answer ✦</p>
+    <h1 class="yes-title">She said yes!!!</h1>
+    <div class="yes-divider"></div>
+    <p class="yes-msg">
+      All of the above — because that's everything I want you to be. My adventure buddy, my cuddle companion, my partner in everything... and most of all, <em>my girlfriend.</em> 💖
+    </p>
+    <button class="back-btn" onclick="showScreen('intro')" style="margin-top:0.5rem;">← Try again</button>
+  </div>
+</div>
+
+<script>
+  // Soft floating particles
+  const colours = ['#ff3d7f','#7b2fff','#00e5d4','#b8ff57','#ffffff'];
+  const p = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const d = document.createElement('div');
+    d.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    d.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colours[Math.floor(Math.random()*colours.length)]};
+      animation-duration:${12+Math.random()*16}s;
+      animation-delay:${Math.random()*14}s;
+      opacity:0;
+      box-shadow: 0 0 ${size*2}px ${colours[Math.floor(Math.random()*colours.length)]};
+    `;
+    p.appendChild(d);
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function answer(type) {
+    if (type === 'yes') { showScreen('yes-screen'); launchConfetti(); }
+    else { showScreen('res-' + type); }
+  }
+
+  function goBack() { showScreen('quiz'); }
+
+  function launchConfetti() {
+    const colors = ['#ff3d7f','#b8ff57','#00e5d4','#7b2fff','#ffe600','#ffffff'];
+    const shapes = ['✦','★','♥','◆','✿'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-10px';
+        if (Math.random() > 0.45) {
+          c.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+          c.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+          c.style.color = colors[Math.floor(Math.random() * colors.length)];
+        } else {
+          c.style.width = (5 + Math.random() * 7) + 'px';
+          c.style.height = (5 + Math.random() * 7) + 'px';
+          c.style.background = colors[Math.floor(Math.random() * colors.length)];
+          c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        }
+        c.style.animationDuration = (2 + Math.random() * 3) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }, i * 30);
+    }
+  }
+</script>
+</body>
+</html>
