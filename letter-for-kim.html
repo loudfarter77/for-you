@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A letter for Kim 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blush:     #fde8e8;
+  --rose:      #e8899a;
+  --deep-rose: #c4637a;
+  --peach:     #fdd5b1;
+  --sage:      #b5cfa8;
+  --lavender:  #ddd0f0;
+  --cream:     #fef9f2;
+  --text:      #3d2a32;
+  --soft:      #9a7888;
+  --lighter:   #c4a8b4;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── PETAL RAIN ── */
+.petal-layer {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.petal {
+  position: absolute; top: -30px;
+  animation: petalFall linear infinite; opacity: 0;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+  8%   { opacity: 0.6; }
+  92%  { opacity: 0.3; }
+  100% { transform: translateY(108vh) rotate(400deg) translateX(50px); opacity: 0; }
+}
+
+/* ── SPLASH SCREEN ── */
+#splash {
+  position: fixed; inset: 0; z-index: 100;
+  background: linear-gradient(160deg, #fef0f5 0%, #fde8ee 50%, #f0eaf8 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 2rem;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+#splash.hidden { opacity: 0; pointer-events: none; transform: scale(1.03); }
+
+.splash-seal {
+  font-size: 4.5rem;
+  animation: sealPulse 2.5s ease-in-out infinite;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+@keyframes sealPulse {
+  0%,100% { transform: scale(1) rotate(-3deg); }
+  50%      { transform: scale(1.08) rotate(3deg); }
+}
+
+.splash-tag {
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--rose); margin-bottom: 0.75rem;
+}
+
+.splash-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 7vw, 3.8rem);
+  font-weight: 600; line-height: 1.15;
+  color: var(--text); margin-bottom: 0.5rem;
+}
+.splash-title em { color: var(--deep-rose); font-style: italic; }
+
+.splash-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 1.05rem;
+  color: var(--soft); margin-bottom: 2.5rem;
+}
+
+.open-btn {
+  padding: 0.9rem 2.4rem;
+  background: var(--deep-rose); color: white;
+  border: none; border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.04em;
+  box-shadow: 0 6px 30px rgba(196,99,122,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.open-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+  transform: translateX(-100%); transition: transform 0.5s;
+}
+.open-btn:hover::after { transform: translateX(100%); }
+.open-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(196,99,122,0.45); }
+
+/* ── SCROLL PROGRESS ── */
+.progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; z-index: 50;
+  background: rgba(244,167,185,0.15);
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--rose), var(--lavender), var(--sage));
+  transition: width 0.1s linear;
+}
+
+/* ── LETTER WRAPPER ── */
+.letter {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 6rem 2rem 12rem;
+  position: relative; z-index: 1;
+}
+
+/* ── SECTIONS ── */
+.section {
+  margin-bottom: 7rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── DIVIDERS ── */
+.divider {
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 0.6rem;
+  color: var(--rose);
+  opacity: 0.5;
+  margin: -3rem auto 7rem;
+  opacity: 0;
+  transition: opacity 1s ease 0.3s;
+}
+.divider.visible { opacity: 0.45; }
+
+/* ── TYPOGRAPHY ── */
+.section-tag {
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--rose); margin-bottom: 1.25rem; display: block;
+}
+
+.section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5.5vw, 3rem);
+  font-weight: 600; line-height: 1.2;
+  color: var(--text); margin-bottom: 1.25rem;
+}
+.section h2 em { color: var(--deep-rose); font-style: italic; }
+
+.section p {
+  font-size: 1.05rem; line-height: 1.95;
+  color: var(--soft); margin-bottom: 1.1rem;
+  font-weight: 600;
+}
+.section p strong { color: var(--text); }
+.section p em { color: var(--deep-rose); font-style: italic; }
+
+/* ── PULL QUOTES ── */
+.pull-quote {
+  border-left: 3px solid var(--rose);
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  margin: 1.5rem 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── FLOATING EMOJI ACCENT ── */
+.float-emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  animation: floatGently 4s ease-in-out infinite;
+}
+@keyframes floatGently {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-10px) rotate(3deg); }
+}
+
+/* ── QUALITIES GRID ── */
+.qualities {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+.quality-tag {
+  background: rgba(255,255,255,0.7);
+  border: 1.5px solid rgba(232,137,154,0.25);
+  border-radius: 50px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem; font-weight: 700;
+  color: var(--text);
+  display: flex; align-items: center; gap: 0.4rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.quality-tag:hover { transform: translateY(-2px); border-color: var(--rose); }
+
+/* ── QUESTION SECTION ── */
+#section-question {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.big-question {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 600; line-height: 1.1;
+  color: var(--text); margin-bottom: 1rem;
+}
+.big-question em { color: var(--deep-rose); font-style: italic; }
+
+.question-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 1.1rem;
+  color: var(--soft); margin-bottom: 2.5rem; line-height: 1.7;
+}
+
+/* ── ANSWER BUTTONS ── */
+.answer-wrap {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.btn-yes {
+  padding: 1rem 2.5rem;
+  background: var(--deep-rose); color: white;
+  border: none; border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.04em;
+  box-shadow: 0 6px 28px rgba(196,99,122,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-yes:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(196,99,122,0.5); }
+
+.btn-yes.sage {
+  background: var(--sage);
+  box-shadow: 0 6px 28px rgba(181,207,168,0.4);
+}
+.btn-yes.sage:hover { box-shadow: 0 10px 36px rgba(181,207,168,0.55); }
+
+/* ── CELEBRATION ── */
+#celebration {
+  display: none;
+  padding: 2rem 0 0;
+  text-align: center;
+}
+.celebration-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--deep-rose);
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+.celebration-emoji {
+  font-size: 3rem;
+  animation: floatGently 3s ease-in-out infinite;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* ── FOOTER ── */
+.letter-footer {
+  text-align: center;
+  padding-top: 4rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--lighter);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.letter-footer.visible { opacity: 1; }
+
+/* ── CONFETTI ── */
+.confetti-piece {
+  position: fixed; pointer-events: none;
+  animation: cfall linear forwards; z-index: 999;
+}
+@keyframes cfall {
+  0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(700deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="petal-layer" id="petalLayer"></div>
+
+<!-- ── SPLASH ── -->
+<div id="splash">
+  <span class="splash-seal">💌</span>
+  <p class="splash-tag">personal & confidential</p>
+  <h1 class="splash-title">A letter<br>for <em>Kim.</em></h1>
+  <p class="splash-sub">from Nico, with a question at the end.</p>
+  <button class="open-btn" onclick="openLetter()">Open it 🌸</button>
+</div>
+
+<!-- ── PROGRESS BAR ── -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ── THE LETTER ── -->
+<div class="letter">
+
+  <!-- 1. OPENER -->
+  <div class="section" id="s1">
+    <span class="float-emoji">🌸</span>
+    <span class="section-tag">a letter from Nico</span>
+    <h2>Hey Kim.</h2>
+    <p>
+      Okay, so. I wrote you a letter. On a website. 
+      Which is either the most romantic thing you've ever seen, 
+      or deeply unhinged — I'm going to go ahead and say <strong>both</strong> 
+      and hope that works in my favour.
+    </p>
+    <p>
+      Scroll down. I promise it gets better.
+    </p>
+  </div>
+
+  <div class="divider">🌿 ✦ 🌿</div>
+
+  <!-- 2. THE UNIVERSE THING -->
+  <div class="section" id="s2">
+    <span class="section-tag">how we got here</span>
+    <h2>Here's the thing<br>about <em>the universe.</em></h2>
+    <p>
+      You and I weren't exactly an obvious match on paper. 
+      And yet somehow, here we are. 
+      An unsuspecting pair that the universe quietly, sneakily 
+      decided should find each other.
+    </p>
+    <div class="pull-quote">
+      "I didn't see you coming. That's probably my favourite thing about this."
+    </div>
+    <p>
+      The kind of match that doesn't announce itself loudly. 
+      It just settles in — <em>warm and easy</em> — 
+      and suddenly you realise you've been smiling without meaning to.
+    </p>
+  </div>
+
+  <div class="divider">🌷 ✦ 🌷</div>
+
+  <!-- 3. WHAT SHE'S LIKE -->
+  <div class="section" id="s3">
+    <span class="section-tag">for the record</span>
+    <h2>Also, for the record —<br><em>have you met you?</em></h2>
+    <p>
+      Because I have. And I'd like to submit the following evidence:
+    </p>
+    <div class="qualities">
+      <span class="quality-tag">✨ genuinely beautiful</span>
+      <span class="quality-tag">🧠 so smart it's a little annoying</span>
+      <span class="quality-tag">💛 kind in a real way</span>
+      <span class="quality-tag">🎨 taste that's actually impeccable</span>
+      <span class="quality-tag">😄 fun to be around</span>
+      <span class="quality-tag">💅 the style to match</span>
+    </div>
+    <p>
+      I'm not just saying that. I genuinely think you're one of those people 
+      who makes a room better by being in it — 
+      and either you already know that, or you don't, 
+      and either way I'm happy to keep reminding you.
+    </p>
+  </div>
+
+  <div class="divider">🌺 ✦ 🌺</div>
+
+  <!-- 4. HOW SHE MAKES HIM FEEL -->
+  <div class="section" id="s4">
+    <span class="section-tag">the honest part</span>
+    <h2>How you make<br><em>me feel.</em></h2>
+    <p>
+      This is the part where I stop being funny and just tell you the truth.
+    </p>
+    <p>
+      Around you, I feel <strong>comfortable</strong>. 
+      Not the boring kind of comfortable — 
+      the kind where you can actually be yourself 
+      and it lands well. Where you don't have to perform or shrink or explain yourself.
+    </p>
+    <div class="pull-quote">
+      "You make me feel confident. Like the best version of myself 
+      just shows up when you're around."
+    </div>
+    <p>
+      That's not a small thing, Kim. That's actually kind of everything.
+    </p>
+  </div>
+
+  <div class="divider">🌸 ✦ 🌸</div>
+
+  <!-- 5. THE QUESTION -->
+  <div class="section" id="section-question">
+    <span class="float-emoji">💐</span>
+    <span class="section-tag">the reason for all of this</span>
+    <h2 class="big-question">
+      So, Kim —<br>
+      will you be<br>
+      my <em>girlfriend?</em>
+    </h2>
+    <p class="question-note">
+      No pressure. But also — I made you an entire website. 
+      Just saying.
+    </p>
+    <div class="answer-wrap">
+      <button class="btn-yes sage" onclick="sayYes()">Yes 🌸</button>
+      <button class="btn-yes" onclick="sayYes()">Obviously yes 💐</button>
+    </div>
+    <div id="celebration">
+      <p class="celebration-text">
+        ✨ There it is. She said yes.<br>
+        The whole garden heard it, Nico. 🌸
+      </p>
+      <span class="celebration-emoji">💐</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="letter-footer" id="letterFooter">
+    made with a lot of feeling, by Nico — for Kim 🌸
+  </div>
+
+</div>
+
+<script>
+  // ── PETALS ──
+  const petals = ['🌸','🌷','🌺','🍃','✿','🌼'];
+  const pl = document.getElementById('petalLayer');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petals[Math.floor(Math.random() * petals.length)];
+    p.style.left = Math.random() * 100 + '%';
+    p.style.fontSize = (0.65 + Math.random() * 0.75) + 'rem';
+    p.style.animationDuration = (12 + Math.random() * 16) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    pl.appendChild(p);
+  }
+
+  // ── OPEN LETTER ──
+  function openLetter() {
+    document.getElementById('splash').classList.add('hidden');
+    window.scrollTo(0, 0);
+  }
+
+  // ── SCROLL REVEAL ──
+  const sections  = document.querySelectorAll('.section, .divider, .letter-footer');
+  const fillEl    = document.getElementById('progressFill');
+
+  function onScroll() {
+    // progress bar
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    fillEl.style.width = Math.min(100, (window.scrollY / docH) * 100) + '%';
+
+    // reveal
+    sections.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.88) {
+        el.classList.add('visible');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ── YES ──
+  function sayYes() {
+    document.querySelector('.answer-wrap').style.display = 'none';
+    document.getElementById('celebration').style.display = 'block';
+    launchPetals();
+    // scroll celebration into view
+    setTimeout(() => {
+      document.getElementById('celebration').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+  }
+
+  function launchPetals() {
+    const colours = ['#f4a7b9','#b5cfa8','#ddd0f0','#fdd5b1','#fde8e8','#fff'];
+    const emos    = ['🌸','🌷','✨','🌺','💐','🌼','🍃'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-10px';
+        if (Math.random() > 0.4) {
+          c.textContent = emos[Math.floor(Math.random() * emos.length)];
+          c.style.fontSize = (0.9 + Math.random() * 1.1) + 'rem';
+        } else {
+          c.style.width  = (5 + Math.random() * 7) + 'px';
+          c.style.height = (5 + Math.random() * 7) + 'px';
+          c.style.background = colours[Math.floor(Math.random() * colours.length)];
+          c.style.borderRadius = '50%';
+        }
+        c.style.animationDuration = (2.5 + Math.random() * 3) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 6000);
+      }, i * 35);
+    }
+  }
+</script>
+</body>
+</html>
